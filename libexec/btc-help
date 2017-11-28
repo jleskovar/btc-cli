@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+set -e
+
+print_summaries() {
+  local commands=()
+  local summaries=()
+  local longest_command=0
+  local command
+
+  for command in $(btc-commands); do
+    
+    if bitcoin-cli help $command | grep "unknown command" >/dev/null; then
+      local file="$(command_path $command)"
+      if [ ! -h "$file" ]; then
+        local summary="$(summary "$file")"
+        if [ -n "$summary" ]; then
+          commands["${#commands[@]}"]="$command"
+          summaries["${#summaries[@]}"]="$summary"
+
+          if [ "${#command}" -gt "$longest_command" ]; then
+            longest_command="${#command}"
+          fi
+        fi
+      fi
+    else
+      local summary=$(bitcoin-cli help "$command" | tail -n +2 | awk '/./ {print;exit}')
+      commands["${#commands[@]}"]="$command"
+      summaries["${#summaries[@]}"]="$summary"
+
+      if [ "${#command}" -gt "$longest_command" ]; then
+        longest_command="${#command}"
+      fi
+    fi
+  done
+
+  local index
+  local columns="$(tput cols)"
+  local summary_length=$(( $columns - $longest_command - 5 ))
+
+  for (( index=0; index < ${#commands[@]}; index++ )); do
+    printf "   %-${longest_command}s  %s\n" "${commands[$index]}" \
+      "$(truncate "$summary_length" "${summaries[$index]}")"
+  done
+}
+
+print_help() {
+  local file="$1"
+  local usage="$(usage "$file")"
+
+  if [ -n "$usage" ]; then
+    echo "$usage"
+
+    local help="$(help "$file")"
+    [ -n "$help" ] && echo && echo "$help"
+  else
+    echo "Sorry, this command isn't documented yet."
+  fi
+}
+
+command_path() {
+  command -v "btc-$command" || command -v "btc-sh-$command" || true
+}
+
+summary() {
+  sed -n "s/^# Summary: \(.*\)/\1/p" "$1" 2>/dev/null
+}
+
+usage() {
+  sed -n "s/^# \(Usage: .*\)/\1/p" "$1" 2>/dev/null
+}
+
+help() {
+  awk '/^[^#]/{p=0} /^# Help:/{p=1} p' "$1" | sed "s/^# Help: //;s/^# //;s/^#//"
+}
+
+truncate() {
+  local max_length="$1"
+  local string="$2"
+
+  if [ "${#string}" -gt "$max_length" ]; then
+    local length=$(( $max_length - 3 ))
+    echo "${string:0:$length}..."
+  else
+    echo "$string"
+  fi
+}
+
+# Provide btc completions
+if [ "$1" = "--complete" ]; then
+  exec "btc-commands"
+  exit
+fi
+
+command="$1"
+case "$command" in
+"") echo "Usage: btc <command> [<args>]
+
+Some useful btc commands are:
+$(print_summaries)
+
+See 'btc help <command>' for information on a specific command."
+;;
+*)
+  file="$(command_path "$command")"
+
+  if [ -n "$file" ]; then
+    print_help "$file"
+  else
+    exec bitcoin-cli help "$command"
+  fi
+esac
