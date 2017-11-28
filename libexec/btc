@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+
 resolve_link() {
   $(type -p greadlink readlink | head -1) "$1"
 }
@@ -28,6 +29,7 @@ if ! bitcoin-cli help 2>/dev/null 1>&2; then
   exit 1
 fi  
 
+
 command="$1"
 case "$command" in
 "" | "-h" | "--help" )
@@ -35,8 +37,9 @@ case "$command" in
   ;;
 * )
   command_path="$(command -v "btc-$command" || true)"
+  
   if [ ! -x "$command_path" ]; then
-    exec "bitcoin-cli" "$@"
+    exec bitcoin-cli "$@"
   fi
 
   shift

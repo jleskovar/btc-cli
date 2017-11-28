@@ -63,7 +63,6 @@ bash | zsh )
   ;;
 esac
 
-commands=(`btc commands --sh`)
 IFS="|"
 cat <<EOS
 _btc_wrapper() {
@@ -72,12 +71,7 @@ _btc_wrapper() {
     shift
   fi
 
-  case "\$command" in
-  ${commands[*]})
-    eval \`btc "sh-\$command" "\$@"\`;;
-  *)
-    command btc "\$command" "\$@";;
-  esac
+  command btc "\$command" "\$@"
 }
 EOS
 
