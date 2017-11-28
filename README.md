@@ -1,5 +1,7 @@
 # btc-cli
 Adaptive bash/zsh support for bitcoin-cli
+Should support all versions of bitcoin-cli (tested on Bitcoin RPC client v0.15.1). 
+Offers tab-completion and help support (see Usage)
 
 ## Installing btc-cli
 
