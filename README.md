@@ -3,7 +3,7 @@ Adaptive bash/zsh support for bitcoin-cli.
 
 Introduces the 'btc' command on PATH, with sub-commands automatically forwarded to bitcoin-cli. Auto-completion for sub-commands comes for free.
 
-Should support all versions of bitcoin-cli (tested on Bitcoin RPC client v0.15.1).
+Should support all versions of bitcoin-cli, including future versions (tested on Bitcoin RPC client v0.15.1).
 
 ## Installing btc-cli
 
