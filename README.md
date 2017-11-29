@@ -1,8 +1,9 @@
 # btc-cli
-Adaptive bash/zsh support for bitcoin-cli.
+Adaptive bash/zsh support for bitcoin-cli. 
+
+Introduces the 'btc' command on PATH, with sub-commands automatically forwarded to bitcoin-cli. Auto-completion for sub-commands comes for free.
 
 Should support all versions of bitcoin-cli (tested on Bitcoin RPC client v0.15.1).
-Offers tab-completion and help support (see Usage)
 
 ## Installing btc-cli
 
@@ -31,4 +32,21 @@ For zsh users:
     addnode                 Attempts to add or remove a node from the addnode list.
     ...
     
+    james@Jamess-MacBook-Pro:~/code/btc-cli$ btc help abortrescan 
+    abortrescan
+
+    Stops current wallet rescan triggered e.g. by an importprivkey call.
+
+    Examples:
+
+    Import a private key
+    > bitcoin-cli importprivkey "mykey"
+
+    Abort the running wallet rescan
+    > bitcoin-cli abortrescan 
+
+    As a JSON-RPC call
+    > curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "abortrescan", "params": [] }' -H 'content-type:      text/plain;' http://127.0.0.1:8332/
+
+
     
