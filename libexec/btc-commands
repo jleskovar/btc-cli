@@ -1,17 +1,6 @@
 #!/usr/bin/env bash
-# Usage: btc commands
-# Summary: List all btc commands
-# Help: This command is mostly used for autocompletion in various shells, and for `btc help`.
-# Also, this command helps find commands that are named the same as potentially builtin shell commands (which, cd, etc)
 
 set -e
-
-# Provide btc completions
-if [ "$1" = "--complete" ]; then
-  echo --sh
-  echo --no-sh
-  exit
-fi
 
 if [ "$1" = "--sh" ]; then
   sh=1
@@ -19,11 +8,15 @@ if [ "$1" = "--sh" ]; then
 elif [ "$1" = "--no-sh" ]; then
   nosh=1
   shift
+elif [ "$1" = "--not-cli" ]; then
+  nocli=1
+  shift
 fi
 
 shopt -s nullglob
 
-{ for path in ${PATH//:/$'\n'}; do
+{ # Deal with commands found on PATH
+  for path in ${PATH//:/$'\n'}; do
     for command in "${path}/btc-"*; do
       command="${command##*btc-}"
       if [ -n "$sh" ]; then
@@ -40,6 +33,20 @@ shopt -s nullglob
     done
   done
 
-  bitcoin-cli help | awk '{print $1}' | grep -v '==' | grep -v '^$'
+  # Deal with commands discovered from bitcoin-cli
+  # Cache subcommands and summaries for 24 hours
+
+  if [ ! -f ~/.btc-commands ] || find ~/.btc-commands -mtime +1 | grep -q '.'; then
+    > ~/.btc-commands
+    btc_commands=$(bitcoin-cli help | awk '{print $1}' | grep -v '==' | grep -v '^$' | sort -u)
+    for btc_command in $btc_commands; do
+      summary=$(bitcoin-cli help "$btc_command" | tail -n +2 | awk '/./ {print;exit}')
+      echo "$btc_command|$summary" >> ~/.btc-commands
+    done
+  fi
+
+  if [ -z "$nocli" ]; then
+    cat ~/.btc-commands | cut -f1 -d'|'
+  fi
 
 } | sort -u

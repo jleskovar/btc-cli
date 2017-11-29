@@ -7,31 +7,34 @@ print_summaries() {
   local longest_command=0
   local command
 
-  for command in $(btc-commands); do
-    
-    if bitcoin-cli help $command | grep "unknown command" >/dev/null; then
-      local file="$(command_path $command)"
-      if [ ! -h "$file" ]; then
-        local summary="$(summary "$file")"
-        if [ -n "$summary" ]; then
-          commands["${#commands[@]}"]="$command"
-          summaries["${#summaries[@]}"]="$summary"
+  # Extract command summaries from file-based sub-commands
+  for command in $(btc-commands --not-cli); do
+    local file="$(command_path $command)"
+    if [ ! -h "$file" ]; then
+      local summary="$(summary "$file")"
+      if [ -n "$summary" ]; then
+        commands["${#commands[@]}"]="$command"
+        summaries["${#summaries[@]}"]="$summary"
 
-          if [ "${#command}" -gt "$longest_command" ]; then
-            longest_command="${#command}"
-          fi
+        if [ "${#command}" -gt "$longest_command" ]; then
+          longest_command="${#command}"
         fi
-      fi
-    else
-      local summary=$(bitcoin-cli help "$command" | tail -n +2 | awk '/./ {print;exit}')
-      commands["${#commands[@]}"]="$command"
-      summaries["${#summaries[@]}"]="$summary"
-
-      if [ "${#command}" -gt "$longest_command" ]; then
-        longest_command="${#command}"
       fi
     fi
   done
+
+  # Extract cached bitcoin-cli commands + summaries
+  while IFS= read -r command_summary
+  do
+    local cmd=${command_summary%%|*}
+    local summary=${command_summary##*|}
+    commands["${#commands[@]}"]="$cmd"
+    summaries["${#summaries[@]}"]="$summary"
+
+    if [ "${#cmd}" -gt "$longest_command" ]; then
+      longest_command="${#cmd}"
+    fi
+  done < ~/.btc-commands
 
   local index
   local columns="$(tput cols)"
@@ -62,11 +65,11 @@ command_path() {
 }
 
 summary() {
-  sed -n "s/^# Summary: \(.*\)/\1/p" "$1" 2>/dev/null
+  sed -n "s/^# Summary: \(.*\)/\1/p" "$1"
 }
 
 usage() {
-  sed -n "s/^# \(Usage: .*\)/\1/p" "$1" 2>/dev/null
+  sed -n "s/^# \(Usage: .*\)/\1/p" "$1"
 }
 
 help() {
