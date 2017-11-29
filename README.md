@@ -51,3 +51,6 @@ For zsh users:
 
 
     
+
+### Donate
+bitcoin: 17bxks7R353xniuuTkbsEXwwqFn96vr2X7
