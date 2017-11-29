@@ -5,6 +5,9 @@ Introduces the 'btc' command on PATH, with sub-commands automatically forwarded 
 
 ## Installing btc-cli
 
+### Prequisites
+Ensure bitcoin-cli is on $PATH
+
     cd
     git clone https://github.com/jleskovar/btc-cli .btc-cli
 
