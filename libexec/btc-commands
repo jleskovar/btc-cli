@@ -36,7 +36,7 @@ shopt -s nullglob
   # Deal with commands discovered from bitcoin-cli
   # Cache subcommands and summaries for 24 hours
 
-  if [ ! -f ~/.btc-commands ] || find ~/.btc-commands -mtime +1 | grep -q '.'; then
+  if ! find ~/.btc-commands -mtime -1 2>/dev/null | grep -q '.'; then
     > ~/.btc-commands
     btc_commands=$(bitcoin-cli help | awk '{print $1}' | grep -v '==' | grep -v '^$' | sort -u)
     for btc_command in $btc_commands; do
