@@ -39,7 +39,15 @@ case "$command" in
   command_path="$(command -v "btc-$command" || true)"
   
   if [ ! -x "$command_path" ]; then
-    exec bitcoin-cli "$@"
+    shift
+    case "$@" in
+    "-h" | "-?" | "--help" )
+      exec bitcoin-cli help "$command"
+      ;;
+    * )
+      exec bitcoin-cli "$command" "$@"
+      ;;
+    esac
   fi
 
   shift
