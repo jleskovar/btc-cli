@@ -11,27 +11,32 @@ elif [ "$1" = "--no-sh" ]; then
 elif [ "$1" = "--not-cli" ]; then
   nocli=1
   shift
+elif [ "$1" = "--just-cli" ]; then
+  justcli=1
+  shift
 fi
 
 shopt -s nullglob
 
 { # Deal with commands found on PATH
-  for path in ${PATH//:/$'\n'}; do
-    for command in "${path}/btc-"*; do
-      command="${command##*btc-}"
-      if [ -n "$sh" ]; then
-        if [ ${command:0:3} = "sh-" ]; then
+  if [ -z "$justcli" ]; then
+    for path in ${PATH//:/$'\n'}; do
+      for command in "${path}/btc-"*; do
+        command="${command##*btc-}"
+        if [ -n "$sh" ]; then
+          if [ ${command:0:3} = "sh-" ]; then
+            echo ${command##sh-}
+          fi
+        elif [ -n "$nosh" ]; then
+          if [ ${command:0:3} != "sh-" ]; then
+            echo ${command##sh-}
+          fi
+        else
           echo ${command##sh-}
         fi
-      elif [ -n "$nosh" ]; then
-        if [ ${command:0:3} != "sh-" ]; then
-          echo ${command##sh-}
-        fi
-      else
-        echo ${command##sh-}
-      fi
+      done
     done
-  done
+  fi
 
   # Deal with commands discovered from bitcoin-cli
   # Cache subcommands and summaries for 24 hours
@@ -45,7 +50,7 @@ shopt -s nullglob
     done
   fi
 
-  if [ -z "$nocli" ]; then
+  if [ -z "$nocli" ] ; then
     cat ~/.btc-commands | cut -f1 -d'|'
   fi
 

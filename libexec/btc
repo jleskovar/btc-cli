@@ -24,7 +24,7 @@ libexec_path="$(abs_dirname "$0")"
 export _BTC_ROOT="$(abs_dirname "$libexec_path")"
 export PATH="${libexec_path}:$PATH"
 
-if ! bitcoin-cli help 2>/dev/null 1>&2; then
+if ! ps -ef | grep -q [b]itcoind; then
   echo "bitcoind was not running"
   exit 1
 fi  
