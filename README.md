@@ -3,21 +3,22 @@ Adaptive bash/zsh support for bitcoin-cli.
 
 Introduces the 'btc' command on PATH, with sub-commands automatically forwarded to bitcoin-cli. Auto-completion for sub-commands comes for free, and should support all versions of bitcoin-cli, including future versions, without needing to make any changes (tested on Bitcoin RPC client v0.15.1)
 
+## Pre-requisites
+Ensure bitcoind and bitcoin-cli are both on $PATH.
+
 ## Installing btc-cli
 
-### Pre-requisites
-First, ensure bitcoin-cli is on $PATH.
-Next, clone/download this repository to your local machine:
+First, clone/download this repository to your local machine:
 
     cd
     git clone https://github.com/jleskovar/btc-cli .btc-cli
 
-For bash users:
+If you're a bash user:
 
     echo 'eval "$($HOME/.btc-cli/bin/btc init -)"' >> ~/.bash_profile
     exec bash
 
-For zsh users:
+If you're a zsh user:
 
     echo 'eval "$($HOME/.btc-cli/bin/btc init -)"' >> ~/.zshenv
     source ~/.zshenv
