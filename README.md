@@ -23,11 +23,14 @@ If you're a bash user:
 
     echo 'eval "$($HOME/.btc-cli/bin/btc init -)"' >> ~/.bash_profile
     exec bash
+    
+**Ubuntu Desktop note**: Modify your ~/.bashrc instead of ~/.bash_profile.
 
 If you're a zsh user:
 
     echo 'eval "$($HOME/.btc-cli/bin/btc init -)"' >> ~/.zshenv
     source ~/.zshenv
+
     
 ## Usage
 
@@ -64,5 +67,4 @@ If you're a zsh user:
 
     
 
-### Donate
-bitcoin: 17bxks7R353xniuuTkbsEXwwqFn96vr2X7
+Donations to: bitcoin:17bxks7R353xniuuTkbsEXwwqFn96vr2X7
