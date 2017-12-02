@@ -23,12 +23,14 @@ print_summaries() {
     fi
   done
 
+  local btc_cli_index="${#commands[@]}"
+
   # Extract cached bitcoin-cli commands + summaries
   while IFS= read -r command_summary
   do
     local cmd=${command_summary%%|*}
     local summary=${command_summary##*|}
-    commands["${#commands[@]}"]="$cmd"
+    commands["${#commands[@]}"]="$cmd"  
     summaries["${#summaries[@]}"]="$summary"
 
     if [ "${#cmd}" -gt "$longest_command" ]; then
@@ -41,6 +43,12 @@ print_summaries() {
   local summary_length=$(( $columns - $longest_command - 5 ))
 
   for (( index=0; index < ${#commands[@]}; index++ )); do
+    if (( index == 0 )); then
+      echo "=== btc commands ==="
+    elif (( index == btc_cli_index )); then
+      echo -e "\n=== bitcoin-cli commands ==="
+    fi
+
     printf "   %-${longest_command}s  %s\n" "${commands[$index]}" \
       "$(truncate "$summary_length" "${summaries[$index]}")"
   done

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Usage: btc start
+# Summary: Start bitcoind
+
+echo "Bitcoin server starting"
+nohup bitcoind "$@" >/dev/null &
