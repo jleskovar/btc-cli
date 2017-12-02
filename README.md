@@ -5,8 +5,9 @@ Introduces the 'btc' command on PATH, with sub-commands automatically forwarded 
 
 ## Installing btc-cli
 
-### Prequisites
-Ensure bitcoin-cli is on $PATH
+### Pre-requisites
+First, ensure bitcoin-cli is on $PATH.
+Next, clone/download this repository to your local machine:
 
     cd
     git clone https://github.com/jleskovar/btc-cli .btc-cli
@@ -23,14 +24,18 @@ For zsh users:
     
 ## Usage
 
-    james@Jamess-MacBook-Pro:~/code/btc-cli$ btc
+    james@Jamess-MacBook-Pro:~/code/btc-cli$ btc 
     Usage: btc <command> [<args>]
 
     Some useful btc commands are:
-    abandontransaction      Mark in-wallet transaction <txid> as abandoned
-    abortrescan             Stops current wallet rescan triggered e.g. by an importprivkey call.
-    addmultisigaddress      Add a nrequired-to-sign multisignature address to the wallet.
-    addnode                 Attempts to add or remove a node from the addnode list.
+    === btc commands ===
+       start                   Start bitcoind
+
+    === bitcoin-cli commands ===
+       abandontransaction      Mark in-wallet transaction <txid> as abandoned
+       abortrescan             Stops current wallet rescan triggered e.g. by an importprivk...
+       addmultisigaddress      Add a nrequired-to-sign multisignature address to the wallet.
+       addnode                 Attempts to add or remove a node from the addnode list.
     ...
     
     james@Jamess-MacBook-Pro:~/code/btc-cli$ btc help abortrescan 
