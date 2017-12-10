@@ -67,4 +67,4 @@ If you're a zsh user:
 
     
 
-Donations to: bitcoin:17bxks7R353xniuuTkbsEXwwqFn96vr2X7
+**<sub><sup>Donations to: bitcoin:17bxks7R353xniuuTkbsEXwwqFn96vr2X7 , thanks!</sup></sub>**
